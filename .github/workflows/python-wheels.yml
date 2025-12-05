@@ -19,26 +19,31 @@ jobs:
         platform:
           - name: linux-x86_64
             os: ubuntu-latest
-            args: --release -F python --out dist --compatibility manylinux_2_34
+            target: x86_64-unknown-linux-gnu
+            manylinux: 2_34
           - name: windows-x86_64
             os: windows-latest
-            args: --release -F python --out dist
+            target: x86_64-pc-windows-msvc
+            manylinux: off
           - name: macos-x86_64
             os: macos-13
-            args: --release -F python --out dist
+            target: x86_64-apple-darwin
+            manylinux: off
           - name: macos-aarch64
             os: macos-14
-            args: --release -F python --out dist
+            target: aarch64-apple-darwin
+            manylinux: off
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-      - uses: dtolnay/rust-toolchain@61a77d273cb53ffc500b8bf0daf1523ccdbf1529 # stable
-        with:
-          toolchain: stable
-      - uses: astral-sh/setup-uv@26d44e6b3946bf660157bf0ef793edeefc7cc45e # v3.1.1
-      - name: Install Python ${{ matrix.python }}
-        run: uv python install ${{ matrix.python }}
+      - uses: dtolnay/rust-toolchain@stable
       - name: Build wheel (${{ matrix.platform.name }}, Py ${{ matrix.python }})
-        run: uv run --python ${{ matrix.python }} maturin build ${{ matrix.platform.args }}
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release -F python --out dist
+          python-version: ${{ matrix.python }}
+          target: ${{ matrix.platform.target }}
+          manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
         uses: actions/upload-artifact@0b255cbe3472e179850acb9b47dbefbae528837d # v4.3.4
         with:
