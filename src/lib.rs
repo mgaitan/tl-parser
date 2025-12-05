@@ -7,10 +7,10 @@ pub mod errors;
 /// Inline data structures
 pub mod inline;
 mod parser;
-/// Query selector API
-pub mod queryselector;
 #[cfg(feature = "python")]
 mod python;
+/// Query selector API
+pub mod queryselector;
 mod stream;
 #[cfg(test)]
 mod tests;
