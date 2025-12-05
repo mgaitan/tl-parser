@@ -42,6 +42,7 @@ jobs:
           command: build
           args: --release -F python --out dist
           python-version: ${{ matrix.python }}
+          pypy-version: "none"
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
