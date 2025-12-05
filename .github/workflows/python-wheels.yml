@@ -45,7 +45,7 @@ jobs:
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
-        uses: actions/upload-artifact@0b255cbe3472e179850acb9b47dbefbae528837d # v4.3.4
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform.name }}-py${{ matrix.python }}-wheels
           path: dist/*.whl
@@ -57,7 +57,7 @@ jobs:
     needs: build
     if: github.event_name == 'release'
     steps:
-      - uses: actions/download-artifact@973fd186ad5f56c6ef5690da87c4ff4c8e7cdafc # v4.1.0
+      - uses: actions/download-artifact@v4
         with:
           path: wheelhouse
       - name: Publish release assets
