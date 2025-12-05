@@ -9,6 +9,8 @@ pub mod inline;
 mod parser;
 /// Query selector API
 pub mod queryselector;
+#[cfg(feature = "python")]
+mod python;
 mod stream;
 #[cfg(test)]
 mod tests;

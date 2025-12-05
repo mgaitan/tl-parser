@@ -17,9 +17,11 @@ exclude = [".github/*"]
 # users of the library should never use these directly
 [features]
 __INTERNALS_DO_NOT_USE = []
+python = ["pyo3"]
 
 [dependencies]
 memchr = "2.7"
+pyo3 = { version = "0.27.2", optional = true, features = ["extension-module"] }
 
 [dev-dependencies]
 criterion = { version = "0.3", features = ["html_reports"] }
@@ -30,3 +32,8 @@ harness = false
 
 [lib]
 name = "tl"
+crate-type = ["rlib", "cdylib"]
+
+[package.metadata.maturin]
+name = "tl-parser"
+python-source = "python"
