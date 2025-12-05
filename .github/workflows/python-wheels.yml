@@ -40,9 +40,8 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: build
-          args: --release -F python --out dist
+          args: --release -F python --out dist --interpreter python
           python-version: ${{ matrix.python }}
-          pypy-version: "none"
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
