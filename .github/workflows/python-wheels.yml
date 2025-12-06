@@ -12,6 +12,8 @@ jobs:
   build:
     name: Build ${{ matrix.platform.name }} (Py ${{ matrix.python }})
     runs-on: ${{ matrix.platform.os }}
+    env:
+      MATURIN_INTERPRETER: ${{ matrix.platform.name == 'linux-x86_64' && format('/opt/python/cp{0}-cp{0}/bin/python', replace(matrix.python, '.', '')) || 'python' }}
     strategy:
       fail-fast: false
       matrix:
@@ -44,7 +46,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: build
-          args: --release -F python --out dist --interpreter python
+          args: --release -F python --out dist --interpreter ${{ env.MATURIN_INTERPRETER }}
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
