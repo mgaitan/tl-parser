@@ -10,14 +10,20 @@ env:
 
 jobs:
   build:
-    name: Build ${{ matrix.platform.name }} (Py ${{ matrix.python }})
+    name: Build ${{ matrix.platform.name }} (Py ${{ matrix.python.version }})
     runs-on: ${{ matrix.platform.os }}
     env:
-      MATURIN_INTERPRETER: ${{ matrix.platform.name == 'linux-x86_64' && format('/opt/python/cp{0}-cp{0}/bin/python', replace(matrix.python, '.', '')) || 'python' }}
+      MATURIN_INTERPRETER: ${{ matrix.platform.name == 'linux-x86_64' && matrix.python.linux_interpreter || 'python' }}
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.12", "3.13", "3.14"]
+        python:
+          - version: "3.12"
+            linux_interpreter: /opt/python/cp312-cp312/bin/python
+          - version: "3.13"
+            linux_interpreter: /opt/python/cp313-cp313/bin/python
+          - version: "3.14"
+            linux_interpreter: /opt/python/cp314-cp314/bin/python
         platform:
           - name: linux-x86_64
             os: ubuntu-latest
@@ -38,11 +44,11 @@ jobs:
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - uses: dtolnay/rust-toolchain@stable
-      - name: Set up CPython ${{ matrix.python }}
+      - name: Set up CPython ${{ matrix.python.version }}
         uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.2.0
         with:
-          python-version: ${{ matrix.python }}
-      - name: Build wheel (${{ matrix.platform.name }}, Py ${{ matrix.python }})
+          python-version: ${{ matrix.python.version }}
+      - name: Build wheel (${{ matrix.platform.name }}, Py ${{ matrix.python.version }})
         uses: PyO3/maturin-action@v1
         with:
           command: build
@@ -52,7 +58,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v5
         with:
-          name: ${{ matrix.platform.name }}-py${{ matrix.python }}-wheels
+          name: ${{ matrix.platform.name }}-py${{ matrix.python.version }}-wheels
           path: dist/*.whl
           if-no-files-found: error
 
