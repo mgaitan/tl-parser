@@ -64,6 +64,6 @@ jobs:
         with:
           path: wheelhouse
       - name: Publish release assets
-        uses: softprops/action-gh-release@69320dbe8719d79f926ba70b1f5a6dbef04510b4 # v2.0.4
+        uses: softprops/action-gh-release@v2
         with:
           files: wheelhouse/**/*.whl
