@@ -36,12 +36,15 @@ jobs:
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - uses: dtolnay/rust-toolchain@stable
+      - name: Set up CPython ${{ matrix.python }}
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.2.0
+        with:
+          python-version: ${{ matrix.python }}
       - name: Build wheel (${{ matrix.platform.name }}, Py ${{ matrix.python }})
         uses: PyO3/maturin-action@v1
         with:
           command: build
           args: --release -F python --out dist --interpreter python
-          python-version: ${{ matrix.python }}
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
