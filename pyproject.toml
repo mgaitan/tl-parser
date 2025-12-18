@@ -15,3 +15,41 @@ python-packages = ["tl"]
 
 [dependency-groups]
 dev = ["pytest>=8.3"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "C90",
+    "A",
+    "ANN",
+    "UP",
+    "RUF",
+    "T10",
+    "ISC",
+    "SIM",
+    "ASYNC",
+    "ERA",
+    "TRY",
+    "BLE",
+    "B",
+    "EXE",
+    "FA",
+    "C4",
+    "N",
+    "PIE",
+    "PERF",
+    "PL",
+    "FURB",
+    "RET",
+    "TID252",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"python/tests/**.py" = ["ANN201"]
+"python/tl/__init__.py" = ["F403", "F405"]

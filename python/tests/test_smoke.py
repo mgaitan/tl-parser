@@ -1,14 +1,13 @@
 import pytest
-
 import tl
 
 
 def test_outer_html_and_inner_html():
     dom = tl.parse("<div>abc <p id='text'>hello <span>world</span></p> def</div>")
     node = dom.get_element_by_id("text")
-    assert node.outer_html() == "<p id=\"text\">hello <span>world</span></p>"
+    assert node.outer_html() == '<p id="text">hello <span>world</span></p>'
     assert node.inner_html() == "hello <span>world</span>"
-    assert dom.outer_html() == "<div>abc <p id=\"text\">hello <span>world</span></p> def</div>"
+    assert dom.outer_html() == '<div>abc <p id="text">hello <span>world</span></p> def</div>'
 
 
 def test_get_element_by_id_and_class_name():
