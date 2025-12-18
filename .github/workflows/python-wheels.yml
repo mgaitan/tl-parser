@@ -43,35 +43,41 @@ jobs:
             manylinux: off
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@4be9e76fd7c4901c61fb841f559994984270fce7 # stable
       - name: Set up CPython ${{ matrix.python.version }}
         uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.2.0
         with:
           python-version: ${{ matrix.python.version }}
       - name: Build wheel (${{ matrix.platform.name }}, Py ${{ matrix.python.version }})
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1
         with:
           command: build
           args: --release -F python --out dist --interpreter ${{ env.MATURIN_INTERPRETER }}
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: ${{ matrix.platform.name }}-py${{ matrix.python.version }}-wheels
           path: dist/*.whl
           if-no-files-found: error
 
   release:
-    name: Attach wheels to release
+    name: Publish release assets in GH / Pypi
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'release'
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           path: wheelhouse
+      - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7
+      - name: Publish
+        run: uv publish wheelhouse/**/*.whl
       - name: Publish release assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
         with:
           files: wheelhouse/**/*.whl
