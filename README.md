@@ -4,16 +4,15 @@
 [![pypi version](https://img.shields.io/pypi/v/tl-parser.svg)](https://pypi.org/project/tl-parser/)
 [![Changelog](https://img.shields.io/github/v/release/mgaitan/tl-parser?include_prereleases&label=changelog)](https://github.com/mgaitan/tl-parser/releases)
 
-`tl-parser` is a fast HTML parser for Python written in Rust.
+`tl` (installed as `tl-parser`) is a fast HTML parser for Python written in
+Rust.
 
 It's a python binding library for
-[`astral-tl`](https://github.com/astral-sh/astral-tl) version, a maintained fork
-of the original [`y21/tl`](https://github.com/y21/tl) focused on performance,
-HTML selector coverage, and a stable API.
+[`astral-tl`](https://github.com/astral-sh/astral-tl)—a maintained fork of the
+original [`y21/tl`](https://github.com/y21/tl)—focused on performance, HTML
+selector coverage and a stable API.
 
 ## Installation
-
-### Pre-built wheels
 
 Wheels for Python 3.12–3.14 are published to PyPI. Install with:
 
