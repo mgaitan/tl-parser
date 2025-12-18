@@ -7,9 +7,9 @@
 `tl-parser` is a fast HTML parser for Python written in Rust.
 
 It's a python binding library for
-[`astral-tl`](https://github.com/astral-sh/astral-tl) version, a maintained
-fork of the original [`y21/tl`](https://github.com/y21/tl) focused on
-performance, HTML selector coverage, and a stable API.
+[`astral-tl`](https://github.com/astral-sh/astral-tl) version, a maintained fork
+of the original [`y21/tl`](https://github.com/y21/tl) focused on performance,
+HTML selector coverage, and a stable API.
 
 ## Installation
 
@@ -76,12 +76,13 @@ print(p.get_attribute("class"))
 
 > Note: the binding currently exposes read-only DOM access (querying,
 > traversing, serialization). Mutation APIs from the original crate (e.g.,
-> changing attributes) are not yet wrapped, but the underlying Rust code supports
-> them if/when we extend the Python surface.
+> changing attributes) are not yet wrapped, but the underlying Rust code
+> supports them if/when we extend the Python surface.
 
 ## Contributing
 
-To hack on the binding, build from source with the `python` feature enabled and let [`maturin`](https://github.com/PyO3/maturin) compile the extension:
+To hack on the binding, build from source with the `python` feature enabled and
+let [`maturin`](https://github.com/PyO3/maturin) compile the extension:
 
 ```bash
 uv run maturin develop -F python
@@ -89,8 +90,8 @@ uv run maturin develop -F python
 
 This installs the extension module in editable mode so that `import tl` picks up
 local changes. For more background on the project and Python+Rust packaging, see
-my blog post "[Expanding the Python universe with
-Rust](https://mgaitan.github.io/en/posts/expanding-the-python-universe-with-rust/)".
+my blog post
+"[Expanding the Python universe with Rust](https://mgaitan.github.io/en/posts/expanding-the-python-universe-with-rust/)".
 
 ## License
 
