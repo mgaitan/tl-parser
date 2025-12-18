@@ -3,13 +3,15 @@
 //! Enable the `python` feature and build with `maturin` to produce the
 //! `tl` extension module (paquete Python `tl-parser`, import `tl`).
 
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
 use crate::parser::NodeHandle;
-use crate::{parse_owned, ParseError, ParserOptions, VDomGuard};
+use crate::parser::HTMLVersion;
+use crate::{parse_owned, Node, ParseError, ParserOptions, VDomGuard};
 
 /// Parses HTML into a DOM that can be used from Python.
 #[pyfunction]
@@ -84,6 +86,14 @@ impl PyDom {
         self.dom.get_ref().outer_html()
     }
 
+    /// Returns the detected HTML version, if any.
+    fn version(&self) -> Option<&'static str> {
+        self.dom
+            .get_ref()
+            .version()
+            .map(html_version_to_str)
+    }
+
     fn __repr__(&self) -> PyResult<String> {
         Ok(format!("<DOM nodes={}>", self.dom.get_ref().nodes().len()))
     }
@@ -146,6 +156,58 @@ impl PyElement {
             .map(|v| v.as_utf8_str().into_owned()))
     }
 
+    /// Returns all attributes as a dictionary keyed by attribute name.
+    fn attributes(&self) -> PyResult<HashMap<String, Option<String>>> {
+        let dom = self.dom.get_ref();
+        let parser = dom.parser();
+        let node = self.handle.get(parser).ok_or_else(|| {
+            PyValueError::new_err("Node handle is no longer valid for this document")
+        })?;
+
+        let Some(tag) = node.as_tag() else {
+            return Ok(HashMap::new());
+        };
+
+        Ok(tag
+            .attributes()
+            .iter()
+            .map(|(k, v)| (k.into_owned(), v.map(|value| value.into_owned())))
+            .collect())
+    }
+
+    /// Returns the `id` attribute if present.
+    fn id(&self) -> PyResult<Option<String>> {
+        self.get_attribute("id")
+    }
+
+    /// Returns the raw `class` attribute value if present.
+    fn class_name(&self) -> PyResult<Option<String>> {
+        self.get_attribute("class")
+    }
+
+    /// Returns the class list as a list of individual tokens.
+    fn class_list(&self) -> PyResult<Vec<String>> {
+        Ok(self
+            .class_name()?
+            .map(|value| value.split_whitespace().map(str::to_owned).collect())
+            .unwrap_or_default())
+    }
+
+    /// Checks if the element has the provided class name.
+    fn has_class(&self, name: &str) -> PyResult<bool> {
+        let dom = self.dom.get_ref();
+        let parser = dom.parser();
+        let node = self.handle.get(parser).ok_or_else(|| {
+            PyValueError::new_err("Node handle is no longer valid for this document")
+        })?;
+
+        let Some(tag) = node.as_tag() else {
+            return Ok(false);
+        };
+
+        Ok(tag.attributes().is_class_member(name))
+    }
+
     /// Returns the direct children of this element (raw nodes included).
     fn children(&self) -> PyResult<Vec<PyElement>> {
         let dom = self.dom.get_ref();
@@ -163,6 +225,47 @@ impl PyElement {
             .iter()
             .map(|handle| PyElement::new(&self.dom, *handle))
             .collect())
+    }
+
+    /// Returns the node type (`element`, `text`, or `comment`).
+    fn node_type(&self) -> PyResult<&'static str> {
+        let dom = self.dom.get_ref();
+        let parser = dom.parser();
+        let node = self.handle.get(parser).ok_or_else(|| {
+            PyValueError::new_err("Node handle is no longer valid for this document")
+        })?;
+
+        let kind = match node {
+            Node::Tag(_) => "element",
+            Node::Raw(_) => "text",
+            Node::Comment(_) => "comment",
+        };
+
+        Ok(kind)
+    }
+
+    /// Returns all elements under this node that match a CSS selector.
+    fn query_selector(&self, selector: &str) -> PyResult<Vec<PyElement>> {
+        let dom = self.dom.get_ref();
+        let parser = dom.parser();
+        let node = self.handle.get(parser).ok_or_else(|| {
+            PyValueError::new_err("Node handle is no longer valid for this document")
+        })?;
+
+        let tag = node
+            .as_tag()
+            .ok_or_else(|| PyValueError::new_err("This node is not an element"))?;
+
+        let mut iter = tag
+            .query_selector(parser, selector)
+            .ok_or_else(|| PyValueError::new_err("Invalid selector"))?;
+
+        let mut elements = Vec::new();
+        while let Some(handle) = iter.next() {
+            elements.push(PyElement::new(&self.dom, handle));
+        }
+
+        Ok(elements)
     }
 
     fn __repr__(&self) -> PyResult<String> {
@@ -203,6 +306,15 @@ enum NodeTextKind {
 
 fn to_py_err(err: ParseError) -> PyErr {
     PyValueError::new_err(err.to_string())
+}
+
+fn html_version_to_str(version: HTMLVersion) -> &'static str {
+    match version {
+        HTMLVersion::HTML5 => "html5",
+        HTMLVersion::StrictHTML401 => "html4-strict",
+        HTMLVersion::TransitionalHTML401 => "html4-transitional",
+        HTMLVersion::FramesetHTML401 => "html4-frameset",
+    }
 }
 
 /// Creates the `tl` Python extension module.
