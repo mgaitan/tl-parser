@@ -49,7 +49,7 @@ jobs:
         with:
           python-version: ${{ matrix.python.version }}
       - name: Build wheel (${{ matrix.platform.name }}, Py ${{ matrix.python.version }})
-        uses: PyO3/maturin-action@3b5f400f9576c9934eaeed862ce6281fef121b67 # v1
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1
         with:
           command: build
           args: --release -F python --out dist --interpreter ${{ env.MATURIN_INTERPRETER }}
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           path: wheelhouse
-      - uses: astral-sh/setup-uv@afb3baf78d56a259980b76d3fc18fe1e99d867c2 # v7
+      - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7
       - name: Publish
         run: uv publish wheelhouse/**/*.whl
       - name: Publish release assets
