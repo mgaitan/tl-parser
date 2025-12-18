@@ -5,6 +5,7 @@ import tl
 def test_outer_html_and_inner_html():
     dom = tl.parse("<div>abc <p id='text'>hello <span>world</span></p> def</div>")
     node = dom.get_element_by_id("text")
+    assert node is not None
     assert node.outer_html() == '<p id="text">hello <span>world</span></p>'
     assert node.inner_html() == "hello <span>world</span>"
     assert dom.outer_html() == '<div>abc <p id="text">hello <span>world</span></p> def</div>'
@@ -14,6 +15,7 @@ def test_get_element_by_id_and_class_name():
     dom = tl.parse("<div></div><p class='a b' id='t'>hey</p><p></p>")
 
     node = dom.get_element_by_id("t")
+    assert node is not None
     assert node.inner_text() == "hey"
 
     matches = dom.get_elements_by_class_name("a")
@@ -26,6 +28,7 @@ def test_get_element_by_id_and_class_name():
 def test_attributes_helpers():
     dom = tl.parse("<p id='t' class='a b' data-x='1'></p>")
     node = dom.get_element_by_id("t")
+    assert node is not None
 
     attrs = node.attributes()
     assert attrs["id"] == "t"
