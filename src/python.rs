@@ -9,8 +9,8 @@ use std::sync::Arc;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
-use crate::parser::NodeHandle;
 use crate::parser::HTMLVersion;
+use crate::parser::NodeHandle;
 use crate::{parse_owned, Node, ParseError, ParserOptions, VDomGuard};
 
 /// Parses HTML into a DOM that can be used from Python.
@@ -88,10 +88,7 @@ impl PyDom {
 
     /// Returns the detected HTML version, if any.
     fn version(&self) -> Option<&'static str> {
-        self.dom
-            .get_ref()
-            .version()
-            .map(html_version_to_str)
+        self.dom.get_ref().version().map(html_version_to_str)
     }
 
     fn __repr__(&self) -> PyResult<String> {
