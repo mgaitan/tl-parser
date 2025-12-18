@@ -69,7 +69,7 @@ jobs:
     if: github.event_name == 'release'
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Check if version already on PyPI
@@ -77,26 +77,12 @@ jobs:
         run: |
           set -euo pipefail
           version="${{ github.event.release.tag_name }}"
-          python - <<'PY'
-import json, os, sys, urllib.request
-
-version = os.environ["VERSION"]
-url = "https://pypi.org/pypi/tl-parser/json"
-
-try:
-    with urllib.request.urlopen(url, timeout=10) as resp:
-        data = json.load(resp)
-except Exception as e:
-    print(f"error checking PyPI: {e}", file=sys.stderr)
-    sys.exit(1)
-
-exists = version in data.get("releases", {})
-with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
-    fh.write(f"exists={'true' if exists else 'false'}\n")
-print(f"version_exists={exists}")
-PY
-        env:
-          VERSION: ${{ github.event.release.tag_name }}
+          exists=$(
+            curl -fsSL https://pypi.org/pypi/tl-parser/json \
+            | jq -r --arg v "$version" 'has("releases") and (.releases[$v] != null)'
+          )
+          echo "exists=${exists}" >> "$GITHUB_OUTPUT"
+          echo "version_exists=${exists}"
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           path: wheelhouse
@@ -107,3 +93,21 @@ PY
       - name: Skip publish (version already on PyPI)
         if: steps.check-version.outputs.exists == 'true'
         run: echo "Version ${{ github.event.release.tag_name }} already on PyPI; skipping publish."
+      - name: Ensure release notes link to PyPI
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          tag="$TAG"
+          link="https://pypi.org/project/tl-parser/${tag}/"
+          current=$(gh release view "$tag" --json body --jq '.body // ""')
+          if grep -q "$link" <<<"$current"; then
+            echo "PyPI link already present."
+            exit 0
+          fi
+          updated="$current"
+          if [ -n "$updated" ]; then
+            updated="$updated"$'\n\n'
+          fi
+          updated="${updated}PyPI: ${link}"
+          gh release edit "$tag" --notes "$updated"
