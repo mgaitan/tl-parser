@@ -69,10 +69,14 @@ jobs:
           python-version: "3.12"
 
       - name: Install uv
-        uses: astral-sh/uv@v0
+        uses: astral-sh/uv@v0.4
 
       - name: Build extension
+        env:
+          UV_PYTHON: "3.12"
         run: uv run --group dev --with maturin>=1.5 maturin develop -F python
 
       - name: Pytest
+        env:
+          UV_PYTHON: "3.12"
         run: uv run --group dev pytest
