@@ -12,3 +12,6 @@ features = ["python"]
 python-source = "python"
 module-name = "tl"
 python-packages = ["tl"]
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
