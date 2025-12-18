@@ -65,7 +65,7 @@ wheels = [
 
 [[package]]
 name = "tl-parser"
-version = "0.7.11"
+version = "0.7.12b1"
 source = { editable = "." }
 
 [package.dev-dependencies]
