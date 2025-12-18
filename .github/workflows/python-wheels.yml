@@ -71,9 +71,39 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: Check if version already on PyPI
+        id: check-version
+        run: |
+          set -euo pipefail
+          version="${{ github.event.release.tag_name }}"
+          python - <<'PY'
+import json, os, sys, urllib.request
+
+version = os.environ["VERSION"]
+url = "https://pypi.org/pypi/tl-parser/json"
+
+try:
+    with urllib.request.urlopen(url, timeout=10) as resp:
+        data = json.load(resp)
+except Exception as e:
+    print(f"error checking PyPI: {e}", file=sys.stderr)
+    sys.exit(1)
+
+exists = version in data.get("releases", {})
+with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+    fh.write(f"exists={'true' if exists else 'false'}\n")
+print(f"version_exists={exists}")
+PY
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           path: wheelhouse
       - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7
       - name: Publish
+        if: steps.check-version.outputs.exists == 'false'
         run: uv publish wheelhouse/**/*.whl
+      - name: Skip publish (version already on PyPI)
+        if: steps.check-version.outputs.exists == 'true'
+        run: echo "Version ${{ github.event.release.tag_name }} already on PyPI; skipping publish."

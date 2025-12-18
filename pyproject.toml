@@ -5,13 +5,18 @@ build-backend = "maturin"
 [project]
 name = "tl-parser"
 version = "0.7.12b1"
-description = "Fast HTML parser for Python, bindings to astral-tl (Rust)"
+description = "Fast HTML parser for Python written in Rust"
 readme = "README.md"
 license = { file = "LICENSE" }
-authors = [{ name = "Astral", email = "hello@astral.sh" }]
+authors = [{ name = "Martín Gaitán", email = "gaitan@gmail.com" }]
 keywords = ["html", "parser", "rust", "bindings"]
-urls = { "Homepage" = "https://github.com/mgaitan/tl-parser", "Repository" = "https://github.com/mgaitan/tl-parser", "Issues" = "https://github.com/mgaitan/tl-parser/issues" }
 requires-python = ">=3.12"
+
+[project.urls]
+Homepage = "https://github.com/mgaitan/tl-parser"
+Repository = "https://github.com/mgaitan/tl-parser"
+Issues = "https://github.com/mgaitan/tl-parser/issues"
+Changelog = "https://github.com/mgaitan/tl-parser/releases"
 
 [tool.maturin]
 features = ["python"]
