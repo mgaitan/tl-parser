@@ -77,7 +77,3 @@ jobs:
       - uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7
       - name: Publish
         run: uv publish wheelhouse/**/*.whl
-      - name: Publish release assets
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
-        with:
-          files: wheelhouse/**/*.whl
