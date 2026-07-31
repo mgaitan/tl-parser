@@ -81,9 +81,9 @@ print(p.get_attribute("class"))
 ## Benchmarks
 
 In our benchmarks, `tl-parser` parses HTML around 5x faster than the
-next-fastest parser and is often up to 100x faster for class, ID, and CSS lookups.
-The chart shows median startup-adjusted time per operation, so lower bars are
-better. See the
+next-fastest parser and is often up to 100x faster for class, ID, and CSS
+lookups. The chart shows median startup-adjusted time per operation, so lower
+bars are better. See the
 [benchmark code](https://github.com/mgaitan/tl-parser/blob/main/benches/benchmark.py)
 for the workloads and reproduction instructions.
 
