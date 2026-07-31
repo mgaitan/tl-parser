@@ -95,6 +95,7 @@ jobs:
         run: echo "Version ${{ github.event.release.tag_name }} already on PyPI; skipping publish."
       - name: Ensure release notes link to PyPI
         env:
+          GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail
