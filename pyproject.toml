@@ -11,15 +11,27 @@ license = { file = "LICENSE" }
 authors = [{ name = "Martín Gaitán", email = "gaitan@gmail.com" }]
 keywords = ["html", "parser", "rust", "bindings"]
 requires-python = ">=3.12"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Rust",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
 
 [project.urls]
 Homepage = "https://github.com/mgaitan/tl-parser"
 Repository = "https://github.com/mgaitan/tl-parser"
 Issues = "https://github.com/mgaitan/tl-parser/issues"
 Changelog = "https://github.com/mgaitan/tl-parser/releases"
+Documentation = "https://github.com/mgaitan/tl-parser#readme"
 
 [tool.maturin]
-features = ["python"]
 python-source = "python"
 module-name = "tl"
 python-packages = ["tl"]

@@ -69,7 +69,7 @@ jobs:
         uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7
 
       - name: Build extension
-        run: uv run --group dev --with maturin>=1.5 maturin develop -F python
+        run: uv run --group dev --with maturin>=1.5 maturin develop
 
       - name: Pytest
         run: uv run --group dev pytest

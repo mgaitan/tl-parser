@@ -52,7 +52,7 @@ jobs:
         uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1
         with:
           command: build
-          args: --release -F python --out dist --interpreter ${{ env.MATURIN_INTERPRETER }}
+          args: --release --out dist --interpreter ${{ env.MATURIN_INTERPRETER }}
           target: ${{ matrix.platform.target }}
           manylinux: ${{ matrix.platform.manylinux }}
       - name: Upload wheels
