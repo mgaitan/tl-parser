@@ -433,7 +433,7 @@ mod tests {
         assert_eq!(x.as_slice(), &[0]);
 
         assert_eq!(x.remove(0), 0);
-        assert_eq!(x.as_slice(), &[]);
+        assert!(x.as_slice().is_empty());
         assert!(!x.is_heap_allocated());
 
         // trigger heap allocation

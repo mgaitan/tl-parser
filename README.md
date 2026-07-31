@@ -80,11 +80,11 @@ print(p.get_attribute("class"))
 
 ## Contributing
 
-To hack on the binding, build from source with the `python` feature enabled and
-let [`maturin`](https://github.com/PyO3/maturin) compile the extension:
+To hack on the binding, let [`maturin`](https://github.com/PyO3/maturin) compile
+the extension from source:
 
 ```bash
-uv run maturin develop -F python
+uv run maturin develop
 ```
 
 This installs the extension module in editable mode so that `import tl` picks up

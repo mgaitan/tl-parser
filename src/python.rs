@@ -67,14 +67,14 @@ impl PyDom {
 
     /// Returns all elements that match a CSS selector.
     fn query_selector(&self, selector: &str) -> PyResult<Vec<PyElement>> {
-        let mut iter = self
+        let iter = self
             .dom
             .get_ref()
             .query_selector(selector)
             .ok_or_else(|| PyValueError::new_err("Invalid selector"))?;
 
         let mut elements = Vec::new();
-        while let Some(handle) = iter.next() {
+        for handle in iter {
             elements.push(PyElement::new(&self.dom, handle));
         }
 
@@ -253,12 +253,12 @@ impl PyElement {
             .as_tag()
             .ok_or_else(|| PyValueError::new_err("This node is not an element"))?;
 
-        let mut iter = tag
+        let iter = tag
             .query_selector(parser, selector)
             .ok_or_else(|| PyValueError::new_err("Invalid selector"))?;
 
         let mut elements = Vec::new();
-        while let Some(handle) = iter.next() {
+        for handle in iter {
             elements.push(PyElement::new(&self.dom, handle));
         }
 
