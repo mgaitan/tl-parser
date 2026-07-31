@@ -78,6 +78,16 @@ print(p.get_attribute("class"))
 > changing attributes) are not yet wrapped, but the underlying Rust code
 > supports them if/when we extend the Python surface.
 
+## Benchmarks
+
+Across parsing and common lookup operations, `tl-parser` is generally faster
+than BeautifulSoup, `lxml.html`, and PyQuery in this benchmark. The chart shows
+median startup-adjusted time per operation, so lower bars are better. See the
+[benchmark code](benches/benchmark.py) for the workloads and reproduction
+instructions.
+
+![Python HTML parser benchmark](benches/results.png)
+
 ## Contributing
 
 To hack on the binding, let [`maturin`](https://github.com/PyO3/maturin) compile

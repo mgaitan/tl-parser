@@ -38,6 +38,13 @@ module-name = "tl"
 python-packages = ["tl"]
 
 [dependency-groups]
+benchmark = [
+    "beautifulsoup4>=4.13",
+    "cssselect>=1.2",
+    "lxml>=5",
+    "matplotlib>=3.9",
+    "pyquery>=2",
+]
 dev = ["pytest>=8.3"]
 
 [tool.ruff]
@@ -75,5 +82,6 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"benches/**.py" = ["ANN401", "PLC0415", "TRY003"]
 "python/tests/**.py" = ["ANN201"]
 "python/tl/__init__.py" = ["F403", "F405"]
