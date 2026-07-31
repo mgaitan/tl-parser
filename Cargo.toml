@@ -16,7 +16,6 @@ exclude = [".github/*"]
 # for fuzzing and benchmarking internals, we need to make them public so that they can be accessed from outside testing crates
 # users of the library should never use these directly
 [features]
-default = ["python"]
 __INTERNALS_DO_NOT_USE = []
 python = ["pyo3"]
 

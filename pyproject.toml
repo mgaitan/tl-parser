@@ -32,6 +32,7 @@ Changelog = "https://github.com/mgaitan/tl-parser/releases"
 Documentation = "https://github.com/mgaitan/tl-parser#readme"
 
 [tool.maturin]
+features = ["python"]
 python-source = "python"
 module-name = "tl"
 python-packages = ["tl"]
