@@ -36,8 +36,8 @@ Run the complete benchmark and generate both the JSON result and chart:
 uv run --group benchmark python benches/benchmark.py run
 ```
 
-Results are written to `benches/results.json` and `benches/results.png`.
-To regenerate only the chart:
+Results are written to `benches/results.json` and `benches/results.png`. To
+regenerate only the chart:
 
 ```bash
 uv run --group benchmark python benches/benchmark.py plot
