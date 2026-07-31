@@ -80,13 +80,14 @@ print(p.get_attribute("class"))
 
 ## Benchmarks
 
-Across parsing and common lookup operations, `tl-parser` is generally faster
-than BeautifulSoup, `lxml.html`, and PyQuery in this benchmark. The chart shows
-median startup-adjusted time per operation, so lower bars are better. See the
-[benchmark code](benches/benchmark.py) for the workloads and reproduction
-instructions.
+In our benchmarks, `tl-parser` parses HTML around 5x faster than the
+next-fastest parser and is often 10x-100x faster for class, ID, and CSS lookups.
+The chart shows median startup-adjusted time per operation, so lower bars are
+better. See the
+[benchmark code](https://github.com/mgaitan/tl-parser/blob/main/benches/benchmark.py)
+for the workloads and reproduction instructions.
 
-![Python HTML parser benchmark](benches/results.png)
+![Python HTML parser benchmark](https://raw.githubusercontent.com/mgaitan/tl-parser/main/benches/results.png)
 
 ## Contributing
 
